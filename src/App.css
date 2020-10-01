@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700,900&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.App {
+  text-align: center;
+}
+
+button {
+  cursor: pointer;
+}
+
+button, input, textarea {
+  font-family: 'Roboto', sans-serif;
+  outline: unset;
+}
+
+input:focus::placeholder, textarea:focus::placeholder {
+  color: transparent;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.blackBtn {
+  padding: 5px 20px;
+  background-color: black;
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
+  transition: all .2s linear;
+}
+
+.blackBtn:hover {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}

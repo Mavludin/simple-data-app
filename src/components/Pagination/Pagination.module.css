@@ -1,0 +1,30 @@
+.Pagination {
+    width: 100%;
+}
+
+.Pagination a + a {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.Pagination img {
+    width: 20px;
+}
+
+.Pagination form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.Pagination h2 {
+    margin: 0;
+    margin-right: 10px;
+}
+.Pagination input {
+    padding: 5px 10px;
+    border: 1px solid black;
+    border-radius: 15px;
+    width: 120px;
+}

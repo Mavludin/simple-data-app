@@ -1,0 +1,31 @@
+.FilterBox > div {
+    position: absolute;
+    right: 0;
+    font-size: 20px;
+}
+
+.FilterForm {
+    border: 1px solid black;
+    width: max-content;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.FilterForm img {
+    width: 16px;
+    margin-right: 10px;
+}
+
+.FilterForm input {
+    border: unset;
+}
+
+.FilterForm button {
+    margin: 0;
+    border: unset;
+    border-left: 1px solid black;
+}
