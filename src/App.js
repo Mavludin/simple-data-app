@@ -21,7 +21,7 @@ const App = () => {
   return (
     <div className="App">
         <BrowserRouter>
-          <DataPage recievedData={recievedData}  showLoader={showLoader} />
+          <DataPage recievedData={recievedData} showLoader={showLoader} />
         </BrowserRouter>
     </div>
   );

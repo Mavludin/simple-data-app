@@ -1,72 +1,71 @@
 import React, { useState } from 'react';
 import classes from './Pagination.module.css';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import prevIcon from '../../assets/images/prev.svg';
 import nextIcon from '../../assets/images/next.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { paginate } from '../../store/actions';
 
-export const Pagination = ({
-    dataPerPage,
-    totalData,
-    paginate,
-    amountOfPages
-}) => {
+const PaginationPage = ({history}) => {
 
-    const [currentPageNum, setCurrentPageNumber] = useState(1);
     const [inputValue, setInputValue] = useState(null);
 
-    const nextPage = (e) => {
-        if (currentPageNum === amountOfPages) e.preventDefault()
+    const amountOfPages = useSelector(state => state.amountOfPages);
+    const pageNumber = useSelector(state => state.pageNumber);
+
+    const dispatch = useDispatch();
+
+    const paginateForward = (e) => {
+        if (pageNumber === amountOfPages) e.preventDefault()
         else {
-            paginate(currentPageNum + 1);
-            setCurrentPageNumber(currentPageNum + 1);
+            dispatch(paginate(pageNumber + 1));
         }
     }
 
-    const prevPage = (e) => {
-        if (currentPageNum === 1) e.preventDefault()
+    const paginateBack = (e) => {
+        if (pageNumber === 1) e.preventDefault()
         else {
-            paginate(currentPageNum - 1);
-            setCurrentPageNumber(currentPageNum - 1)
+            dispatch(paginate(pageNumber - 1));
         }
     }
 
     const handleChange = (e) => {
-        setInputValue(e.target.value)
+        setInputValue(Number(e.target.value))
     }
 
     const goTo = (e) => {
         if (inputValue < 1 || inputValue > amountOfPages) e.preventDefault()
-        else paginate(inputValue)
+        else if (inputValue === pageNumber) e.preventDefault()
+        else {
+            dispatch(paginate(inputValue));
+            history.push(`?page=${inputValue}`);
+        }
+        e.preventDefault()
     }
 
     return (
         <nav className={classes.Pagination}>
             <div>
-                <Link 
-                    onClick={prevPage}
-                    to={`?page=${currentPageNum - 1}`} 
-                >
+                <Link onClick={paginateBack} to={`?page=${pageNumber - 1}`} >
                     <img src={prevIcon} alt="Previous" />
                 </Link>
-                <Link 
-                    onClick={nextPage}
-                    to={`?page=${currentPageNum + 1}`} 
-                >
+                <Link onClick={paginateForward} to={`?page=${pageNumber + 1}`} >
                     <img src={nextIcon} alt="Next" />
                 </Link>
             </div>
             <div>
-                <form action="">
+                <form action="" onSubmit={goTo}>
                     <input type="number" placeholder="Page number" onChange={handleChange} defaultValue={inputValue} />
-                    <Link
+                    <button
+                        type="submit"
                         className="blackBtn"
-                        onClick={goTo}
-                        to={`?page=${inputValue}`} 
                     >
                         Go to
-                    </Link>
+                    </button>
                 </form>
             </div>
         </nav>
     )
 }
+
+export const Pagination = withRouter(PaginationPage)

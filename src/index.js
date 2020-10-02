@@ -11,7 +11,10 @@ import createSagaMiddleWare from 'redux-saga';
 import { watchLoadData } from './saga/sagas';
 
 const sagaMiddleWare = createSagaMiddleWare();
-const store = createStore(mainReducer, applyMiddleware(sagaMiddleWare));
+const store = createStore(
+    mainReducer,
+    applyMiddleware(sagaMiddleWare)
+);
 sagaMiddleWare.run(watchLoadData);
 
 ReactDOM.render(<Provider store={store}> <App /> </Provider>, document.getElementById('root'));

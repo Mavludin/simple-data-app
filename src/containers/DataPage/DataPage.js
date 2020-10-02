@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classes from './DataPage.module.css';
 
 import {Preloader} from '../../components/Preloader/Preloader';
@@ -9,48 +9,57 @@ import sortDownIcon from '../../assets/images/sort-down.svg';
 import sortUpIcon from '../../assets/images/sort-up.svg';
 
 import { dynamicSort, getPropertyNames } from '../../utils/projectFunctions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAmountOfPages, paginate } from '../../store/actions';
 
-export const DataPage = ({recievedData, showLoader}) => {
+export const DataPage = ({recievedData, showLoader, history}) => {
 
-    const [typesOfSort, setTypeOfSort] = useState([])
-    const [pageNum, setPageNum] = useState(1);
-    const [tempFilteredData, setTempFilteredData] = useState([]);
-    const [isTempFiltered, setIsTempFiltered] = useState(false);
+    const [typesOfSort, setTypeOfSort] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
+    const [isFiltered, setIsFiltered] = useState(false);
+    const pageNumber = useSelector(state => state.pageNumber)
 
     const dataPerPage = 10;
-    let amountOfPages;
 
-    if (tempFilteredData.length > 0) amountOfPages = Math.ceil(tempFilteredData.length / dataPerPage);
-    else amountOfPages = Math.ceil(recievedData.length / dataPerPage);
+    const dispatch = useDispatch();
 
-    console.log(recievedData.length)
+    //Setting the initial amount of pages
+    useEffect(()=>{
+        dispatch(setAmountOfPages(recievedData, dataPerPage));
+        dispatch(paginate(pageNumber));
+    }, [dispatch, recievedData, pageNumber, history])
 
+
+    //Sorting the table by cells
     const sortTable = (pos, item, e) => {
 
-        const tempArray = typesOfSort;
+        const tempArray = [...typesOfSort];
 
         item = item.charAt(0).toLowerCase() + item.substr(1);
         if (!tempArray[pos]) {
-            recievedData.sort(dynamicSort(item, 'asc'));
+            if (isFiltered) filteredData.sort(dynamicSort(item, 'asc'));
+            else recievedData.sort(dynamicSort(item, 'asc'));
             tempArray[pos] = true;
             e.currentTarget.querySelectorAll('img')[0].style.display = 'block';
             e.currentTarget.querySelectorAll('img')[1].style.display = 'none';
         } else {
-            recievedData.sort(dynamicSort(item, 'desc'));
+            if (isFiltered) filteredData.sort(dynamicSort(item, 'desc'));
+            else recievedData.sort(dynamicSort(item, 'desc'));
             tempArray[pos] = false;
             e.currentTarget.querySelectorAll('img')[1].style.display = 'block';
             e.currentTarget.querySelectorAll('img')[0].style.display = 'none';
         }
 
         setTypeOfSort(tempArray)
+
     }
 
-    const paginate = (pageNumber) => {
-        setPageNum(pageNumber)
-    }
-
+    //Live search function
     const filterData = (string) => {
-        if (pageNum !== 1) paginate(1);
+        let tempNum = 0;
+        if (pageNumber > 1) tempNum = pageNumber;
+        else if (pageNumber > 1 && string.length > 0) dispatch(paginate(1));
+        else if (tempNum !== 0 && string.length === 0) dispatch(paginate(tempNum))
 
         if (string.length > 0) {
             const tempArray = recievedData.filter(item => {
@@ -62,18 +71,23 @@ export const DataPage = ({recievedData, showLoader}) => {
                 }
                 return null
             });
-            setTempFilteredData(tempArray)
-            setIsTempFiltered(true)
-        } else setIsTempFiltered(false);
+            dispatch(setAmountOfPages(tempArray, dataPerPage))
+            setFilteredData(tempArray);
+            setIsFiltered(true);
+        } else {
+            dispatch(setAmountOfPages(recievedData, dataPerPage));
+            setIsFiltered(false);
+        }
     }
 
+    //Setting object keys as table header cells
     const tableHeaderCells = getPropertyNames(recievedData[0]);
 
     const renderedTableHeaderCells = tableHeaderCells.map((item, pos) => {
         typesOfSort.push(false);
         return (
             <th onClick={(e) => sortTable(pos, item, e)} key={pos + 1}>
-                <div onClick={() => false}>
+                <div>
                     <span>{item}</span>
                     <img className={classes.SortDownIcon} src={sortDownIcon} alt="Sort Down" />
                     <img className={classes.SortUpIcon} src={sortUpIcon} alt="Sort Up" />
@@ -82,11 +96,12 @@ export const DataPage = ({recievedData, showLoader}) => {
         )
     });
 
-    const indexOfLastItem = pageNum * dataPerPage;
+    //Rendering only 10 elements per page
+    const indexOfLastItem = pageNumber * dataPerPage;
     const indexOfFirstItem = indexOfLastItem - dataPerPage;
     let currentData = [];
-    if (isTempFiltered) {
-        currentData = tempFilteredData.slice(indexOfFirstItem, indexOfLastItem);
+    if (isFiltered) {
+        currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
     } else {
         currentData = recievedData.slice(indexOfFirstItem, indexOfLastItem);
     }
@@ -116,15 +131,12 @@ export const DataPage = ({recievedData, showLoader}) => {
                 <div className={classes.Container}>
 
                     {
-                        isTempFiltered ?
+                        isFiltered ?
                             <h1>Search results:</h1>
                             : <h1>Data</h1>
                     }
 
-                    <FilterForm
-                        filterData={filterData}
-                        amountOfPages={amountOfPages}
-                    />
+                    <FilterForm filterData={filterData} />
 
                     <table>
                         <thead>
@@ -138,14 +150,12 @@ export const DataPage = ({recievedData, showLoader}) => {
                     </table>
 
                     {
-                        (!isTempFiltered && (recievedData.length > dataPerPage)) ||
-                            (isTempFiltered && (tempFilteredData.length > dataPerPage))
+                        (!isFiltered && (recievedData.length > dataPerPage)) ||
+                            (isFiltered && (filteredData.length > dataPerPage))
                             ?
                             <Pagination
                                 dataPerPage={dataPerPage}
                                 totalData={recievedData.length}
-                                amountOfPages={amountOfPages}
-                                paginate={paginate}
                             />
                             : null
                     }
