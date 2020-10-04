@@ -22,15 +22,6 @@ export const dynamicSort = (key, order = 'asc') => {
     };
 }
 
-// Check if object is empty
-export const isObjEmpty = (obj) => {
-  for (let key in obj) {
-      if (obj.hasOwnProperty(key))
-          return false;
-  }
-  return true;
-}
-
 //Get object property names
 export const getPropertyNames = (obj) => {
 

@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadData } from './store/actions';
 import { BrowserRouter } from 'react-router-dom';
 
+import sadIcon from './assets/images/cry.svg'
+
 const App = () => {
 
   const dispatch = useDispatch();
@@ -21,7 +23,16 @@ const App = () => {
   return (
     <div className="App">
         <BrowserRouter>
-          <DataPage recievedData={recievedData} showLoader={showLoader} />
+          {
+            !recievedData.length
+            ?
+            <div className="somethingWrong">
+              <div><img src={sadIcon} alt="Sad" /></div>
+              <h1>Something went wrong! <br/> Make sure the API endpoint returns expected data.</h1>
+            </div>
+            :
+            <DataPage recievedData={recievedData} showLoader={showLoader} />
+          }
         </BrowserRouter>
     </div>
   );

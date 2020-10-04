@@ -29,7 +29,6 @@ export const DataPage = ({recievedData, showLoader, history}) => {
         dispatch(paginate(pageNumber));
     }, [dispatch, recievedData, pageNumber, history])
 
-
     //Sorting the table by cells
     const sortTable = (pos, item, e) => {
 

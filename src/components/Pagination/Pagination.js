@@ -33,6 +33,7 @@ const PaginationPage = ({history}) => {
         setInputValue(Number(e.target.value))
     }
 
+    //Handling the goTo functionality as onSubmit event so it'll work on Enter key as well
     const goTo = (e) => {
         if (inputValue < 1 || inputValue > amountOfPages) e.preventDefault()
         else if (inputValue === pageNumber) e.preventDefault()
