@@ -4,7 +4,7 @@ const initialState = {
     recievedData: [],
     showLoader: true,
     amountOfPages: 0,
-    pageNumber: (localStorage[('pageNumber')]) || 1
+    pageNumber: Number((localStorage[('pageNumber')])) || 1
 };
 
 export const mainReducer = (state = initialState, action) => {
@@ -28,7 +28,7 @@ export const mainReducer = (state = initialState, action) => {
             return {
                 ...state,
                 pageNumber: action.payload
-            } 
+            }
         }
         default:
             return {...state};

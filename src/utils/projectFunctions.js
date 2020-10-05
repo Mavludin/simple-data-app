@@ -26,9 +26,7 @@ export const dynamicSort = (key, order = 'asc') => {
 export const getPropertyNames = (obj) => {
 
   const list = []
-
   for (let key in obj) {
-
     if (obj.hasOwnProperty(key)) {
         list.push(key.charAt(0).toUpperCase() + key.substr(1));
     }

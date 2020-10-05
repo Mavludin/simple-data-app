@@ -12,22 +12,22 @@ import { dynamicSort, getPropertyNames } from '../../utils/projectFunctions';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAmountOfPages, paginate } from '../../store/actions';
 
-export const DataPage = ({recievedData, showLoader, history}) => {
+export const DataPage = ({recievedData, showLoader}) => {
 
     const [typesOfSort, setTypeOfSort] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [isFiltered, setIsFiltered] = useState(false);
-    const pageNumber = useSelector(state => state.pageNumber)
+    const pageNumber = useSelector(state => state.pageNumber);
 
     const dataPerPage = 10;
 
     const dispatch = useDispatch();
 
-    //Setting the initial amount of pages
+    //Setting the initial amount of pages and pagination number
     useEffect(()=>{
         dispatch(setAmountOfPages(recievedData, dataPerPage));
         dispatch(paginate(pageNumber));
-    }, [dispatch, recievedData, pageNumber, history])
+    }, [dispatch, recievedData, pageNumber])
 
     //Sorting the table by cells
     const sortTable = (pos, item, e) => {
@@ -55,11 +55,17 @@ export const DataPage = ({recievedData, showLoader, history}) => {
 
     //Live search function
     const filterData = (string) => {
-        let tempNum = 0;
-        if (pageNumber > 1) tempNum = pageNumber;
-        else if (pageNumber > 1 && string.length > 0) dispatch(paginate(1));
+
+
+        //Saving current page number during the searching
+        let tempNum = localStorage[('tempPageNum')] || 0;
+        if (pageNumber > 1 && string.length > 0) {
+            localStorage.setItem('tempPageNum', pageNumber)
+            dispatch(paginate(1)); 
+        }
         else if (tempNum !== 0 && string.length === 0) dispatch(paginate(tempNum))
 
+        //The search itself
         if (string.length > 0) {
             const tempArray = recievedData.filter(item => {
                 item = Object.entries(item);

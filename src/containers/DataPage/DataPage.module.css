@@ -5,36 +5,6 @@
     margin: 0 auto;
 }
 
-.BackToChoice {
-    position: absolute;
-    left: 0;
-    top: 62px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 95px;
-}
-
-.ResetFilter {
-    position: absolute;
-    right: 0;
-    top: 62px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    
-    width: 190px;
-    border: 0;
-    background-color: unset;
-    font-size: 16px;
-}
-
-.ResetFilter img, .BackToChoice img {
-    width: 18px;
-}
-
 .DataPage table {
     border-collapse: collapse;
 
@@ -49,15 +19,49 @@
     max-height: 400px;
 }
 
+.DataPage tr {
+    cursor: pointer;
+    transition: background-color .2s linear;
+}
+
 .DataPage td, th {
     border: 1px solid black;
     padding: 5px;
 
 }
 
-.DataPage tr {
-    cursor: pointer;
-    transition: background-color .2s linear;
+.DataPage th {
+    height: 45px;
+}
+
+.DataPage tr th:first-of-type, .DataPage tr td:first-of-type {
+    min-width: 75px
+}
+
+.DataPage tr th:nth-child(2), .DataPage tr td:nth-child(2) {
+    min-width: 170px
+}
+
+.DataPage tr th:nth-child(3), .DataPage tr td:nth-child(3) {
+    min-width: 95px
+}
+
+.DataPage tr th:nth-child(4), .DataPage tr td:nth-child(4),
+.DataPage tr th:nth-child(5), .DataPage tr td:nth-child(5),
+.DataPage tr th:nth-child(6), .DataPage tr td:nth-child(6),
+.DataPage tr th:nth-child(7), .DataPage tr td:nth-child(7) {
+    min-width: 70px
+}
+
+.DataPage tr th:nth-child(8), .DataPage tr td:nth-child(8),
+.DataPage tr th:nth-child(9), .DataPage tr td:nth-child(9),
+.DataPage tr th:nth-child(10), .DataPage tr td:nth-child(10),
+.DataPage tr th:nth-child(11), .DataPage tr td:nth-child(11) {
+    min-width: 115px
+}
+
+.DataPage tr th:last-of-type, .DataPage tr td:last-of-type {
+    min-width: 75px
 }
 
 .DataPage tbody tr:hover {
@@ -68,34 +72,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 
     position: relative;
 }
 
 .DataPage th img {
-    width: 12px;
+    width: 16px;
+    height: 16px;
     display: none;
     position: absolute;
-    right: 5%;
-}
-
-.SortUpIcon {
-    top: 3px;
 }
 
 .SortDownIcon {
-    bottom: 3px;
+    bottom: -10px
 }
 
-.OverLay {
-    display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 90;
-    background-color: rgba(1,1,1,0.5);
+.SortUpIcon {
+    bottom: -15px
 }
