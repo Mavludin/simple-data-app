@@ -13,7 +13,7 @@ export const FilterForm = ( { filterData }) => {
             <div>
                 <strong>Amount of pages: </strong>{amountOfPages}
             </div>
-            <form className={classes.FilterForm} action="/" onSubmit={e=>e.preventDefault()}>
+            <form className={classes.FilterForm} action="/" onSubmit={e => e.preventDefault()}>
                 <img src={searchIcon} alt="Search Icon"/>
                 <input onChange={(e)=>filterData(e.target.value)} type="text" placeholder="Live search"/>
             </form>

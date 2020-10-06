@@ -1,7 +1,7 @@
 import { PUT_DATA, SET_AMOUNT_OF_PAGES, PAGINATE } from "./actions";
 
 const initialState = {
-    recievedData: [],
+    receivedData: [],
     showLoader: true,
     amountOfPages: 0,
     pageNumber: Number((localStorage[('pageNumber')])) || 1
@@ -13,7 +13,7 @@ export const mainReducer = (state = initialState, action) => {
         case PUT_DATA: {
             return {
                 ...state,
-                recievedData: action.payload,
+                receivedData: action.payload,
                 showLoader: false
             }
         }

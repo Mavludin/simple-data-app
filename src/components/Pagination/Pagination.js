@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import classes from './Pagination.module.css';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import prevIcon from '../../assets/images/prev.svg';
 import nextIcon from '../../assets/images/next.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { paginate } from '../../store/actions';
 
-const PaginationPage = ({history}) => {
+export const Pagination = ({history}) => {
 
     const [inputValue, setInputValue] = useState(null);
 
@@ -39,7 +39,8 @@ const PaginationPage = ({history}) => {
         else if (inputValue === pageNumber) e.preventDefault()
         else {
             dispatch(paginate(inputValue));
-            history.push(`?page=${inputValue}`);
+            if (inputValue === 1) history.push('/');
+            else history.push(`?page=${inputValue}`);
         }
         e.preventDefault()
     }
@@ -56,7 +57,12 @@ const PaginationPage = ({history}) => {
             </div>
             <div>
                 <form action="" onSubmit={goTo}>
-                    <input type="number" placeholder="Page number" onChange={handleChange} defaultValue={inputValue} />
+                    <input 
+                        type="number"
+                        placeholder="Page number"
+                        onChange={handleChange}
+                        defaultValue={inputValue}
+                    />
                     <button
                         type="submit"
                         className="blackBtn"
@@ -68,5 +74,3 @@ const PaginationPage = ({history}) => {
         </nav>
     )
 }
-
-export const Pagination = withRouter(PaginationPage)

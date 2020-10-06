@@ -68,6 +68,10 @@
     background-color: rgba(1,1,1,0.2);
 }
 
+.ActiveTH img {
+    display: block !important;
+}
+
 .DataPage th div {
     display: flex;
     align-items: center;
@@ -78,9 +82,9 @@
 }
 
 .DataPage th img {
+    display: none;
     width: 16px;
     height: 16px;
-    display: none;
     position: absolute;
 }
 

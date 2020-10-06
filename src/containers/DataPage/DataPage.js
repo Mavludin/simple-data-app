@@ -12,22 +12,34 @@ import { dynamicSort, getPropertyNames } from '../../utils/projectFunctions';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAmountOfPages, paginate } from '../../store/actions';
 
-export const DataPage = ({recievedData, showLoader}) => {
+export const DataPage = ({ history }) => {
 
-    const [typesOfSort, setTypeOfSort] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
+    const receivedData = useSelector(state => state.receivedData);
+    const showLoader = useSelector(state => state.showLoader);
+    const [typesOfSort, setTypeOfSort] = useState(receivedData);
+    const [filteredData, setFilteredData] = useState( () => {
+        if (receivedData.length > 0) {
+            return new Array(Object.keys(receivedData[0]).length).fill(false)
+        }
+    });
     const [isFiltered, setIsFiltered] = useState(false);
     const pageNumber = useSelector(state => state.pageNumber);
 
     const dataPerPage = 10;
+    const [activeTableHeaderPos, setActiveTableHeader] = useState(null)
 
     const dispatch = useDispatch();
 
-    //Setting the initial amount of pages and pagination number
+    
     useEffect(()=>{
-        dispatch(setAmountOfPages(recievedData, dataPerPage));
-        dispatch(paginate(pageNumber));
-    }, [dispatch, recievedData, pageNumber])
+        
+        //Setting the initial amount of pages and page
+        dispatch(setAmountOfPages(receivedData, dataPerPage));
+
+        //Avoiding the effect fire on every page change
+        dispatch(paginate(Number(localStorage[('pageNumber')])) || 1);
+
+    }, [dispatch, receivedData])
 
     //Sorting the table by cells
     const sortTable = (pos, item, e) => {
@@ -37,25 +49,21 @@ export const DataPage = ({recievedData, showLoader}) => {
         item = item.charAt(0).toLowerCase() + item.substr(1);
         if (!tempArray[pos]) {
             if (isFiltered) filteredData.sort(dynamicSort(item, 'asc'));
-            else recievedData.sort(dynamicSort(item, 'asc'));
+            else receivedData.sort(dynamicSort(item, 'asc'));
             tempArray[pos] = true;
-            e.currentTarget.querySelectorAll('img')[0].style.display = 'block';
-            e.currentTarget.querySelectorAll('img')[1].style.display = 'none';
         } else {
             if (isFiltered) filteredData.sort(dynamicSort(item, 'desc'));
-            else recievedData.sort(dynamicSort(item, 'desc'));
+            else receivedData.sort(dynamicSort(item, 'desc'));
             tempArray[pos] = false;
-            e.currentTarget.querySelectorAll('img')[1].style.display = 'block';
-            e.currentTarget.querySelectorAll('img')[0].style.display = 'none';
         }
 
+        setActiveTableHeader(pos)
         setTypeOfSort(tempArray)
 
     }
 
     //Live search function
     const filterData = (string) => {
-
 
         //Saving current page number during the searching
         let tempNum = localStorage[('tempPageNum')] || 0;
@@ -67,7 +75,7 @@ export const DataPage = ({recievedData, showLoader}) => {
 
         //The search itself
         if (string.length > 0) {
-            const tempArray = recievedData.filter(item => {
+            const tempArray = receivedData.filter(item => {
                 item = Object.entries(item);
                 for (let key in item) {
                     if (item[key].toString().toLowerCase().includes(string.toLowerCase())) {
@@ -80,18 +88,19 @@ export const DataPage = ({recievedData, showLoader}) => {
             setFilteredData(tempArray);
             setIsFiltered(true);
         } else {
-            dispatch(setAmountOfPages(recievedData, dataPerPage));
+            dispatch(setAmountOfPages(receivedData, dataPerPage));
             setIsFiltered(false);
         }
     }
 
     //Setting object keys as table header cells
-    const tableHeaderCells = getPropertyNames(recievedData[0]);
+    const tableHeaderCells = getPropertyNames(receivedData[0]);
 
     const renderedTableHeaderCells = tableHeaderCells.map((item, pos) => {
-        typesOfSort.push(false);
+        let tableHeaderClasses = null;
+        if (activeTableHeaderPos === pos) tableHeaderClasses = classes.ActiveTH
         return (
-            <th onClick={(e) => sortTable(pos, item, e)} key={pos + 1}>
+            <th className={tableHeaderClasses} onClick={(e) => sortTable(pos, item, e)} key={pos + 1}>
                 <div>
                     <span>{item}</span>
                     <img className={classes.SortDownIcon} src={sortDownIcon} alt="Sort Down" />
@@ -108,12 +117,12 @@ export const DataPage = ({recievedData, showLoader}) => {
     if (isFiltered) {
         currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
     } else {
-        currentData = recievedData.slice(indexOfFirstItem, indexOfLastItem);
+        currentData = receivedData.slice(indexOfFirstItem, indexOfLastItem);
     }
 
     const renderedData = currentData.map((item, pos) => {
         return (
-            <tr key={pos + 1}>
+            <tr key={pos+1}>
                 <td>{item.symbol}</td>
                 <td>{item.sector}</td>
                 <td>{item.securityType}</td>
@@ -154,16 +163,11 @@ export const DataPage = ({recievedData, showLoader}) => {
                         </tbody>
                     </table>
 
-                    {
-                        (!isFiltered && (recievedData.length > dataPerPage)) ||
-                            (isFiltered && (filteredData.length > dataPerPage))
-                            ?
-                            <Pagination
-                                dataPerPage={dataPerPage}
-                                totalData={recievedData.length}
-                            />
-                            : null
-                    }
+                    <Pagination
+                        history={history}
+                        dataPerPage={dataPerPage}
+                        totalData={receivedData.length}
+                    />
                 </div>
             </div>
 
