@@ -14,6 +14,7 @@ body {
 
 button {
   cursor: pointer;
+  border: unset
 }
 
 button, input, textarea {
@@ -28,18 +29,6 @@ input:focus::placeholder, textarea:focus::placeholder {
 a {
   text-decoration: none;
   color: black;
-}
-
-.somethingWrong {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.somethingWrong img {
-  width: 200px;
 }
 
 .blackBtn {

@@ -2,7 +2,7 @@ import { putData, LOAD_DATA } from "../store/actions";
 import { takeEvery, put, call } from 'redux-saga/effects';
 import { dataSource } from "../utils/endpoints";
 
-const fetchData = async () => {
+export const fetchData = async () => {
     const response = await fetch(dataSource);
     const json = await response.json();
     return json

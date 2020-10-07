@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classes from './Pagination.module.css';
-import { Link } from 'react-router-dom';
 import prevIcon from '../../assets/images/prev.svg';
 import nextIcon from '../../assets/images/next.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { paginate } from '../../store/actions';
 
-export const Pagination = ({history}) => {
+export const Pagination = ({ history }) => {
 
     const [inputValue, setInputValue] = useState(null);
 
@@ -33,14 +32,18 @@ export const Pagination = ({history}) => {
         setInputValue(Number(e.target.value))
     }
 
+    //Firing the effect on every pageNumber change and changing the path accordingly
+    useEffect(() => {
+        if (pageNumber === 1) history.push('/');
+        else history.push(`?page=${pageNumber}`);
+    }, [pageNumber, history])
+
     //Handling the goTo functionality as onSubmit event so it'll work on Enter key as well
     const goTo = (e) => {
         if (inputValue < 1 || inputValue > amountOfPages) e.preventDefault()
         else if (inputValue === pageNumber) e.preventDefault()
         else {
             dispatch(paginate(inputValue));
-            if (inputValue === 1) history.push('/');
-            else history.push(`?page=${inputValue}`);
         }
         e.preventDefault()
     }
@@ -48,12 +51,12 @@ export const Pagination = ({history}) => {
     return (
         <nav className={classes.Pagination}>
             <div>
-                <Link onClick={paginateBack} to={`?page=${pageNumber - 1}`} >
+                <button type="button" onClick={paginateBack} >
                     <img src={prevIcon} alt="Previous" />
-                </Link>
-                <Link onClick={paginateForward} to={`?page=${pageNumber + 1}`} >
+                </button>
+                <button type="button" onClick={paginateForward}>
                     <img src={nextIcon} alt="Next" />
-                </Link>
+                </button>
             </div>
             <div>
                 <form action="" onSubmit={goTo}>

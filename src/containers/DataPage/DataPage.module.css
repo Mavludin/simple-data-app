@@ -20,8 +20,11 @@
 }
 
 .DataPage tr {
-    cursor: pointer;
     transition: background-color .2s linear;
+}
+
+.DataPage tbody tr:hover {
+    background-color: rgba(1,1,1,0.2);
 }
 
 .DataPage td, th {
@@ -30,7 +33,7 @@
 
 }
 
-.DataPage th {
+.DataPage tr th {
     height: 45px;
 }
 
@@ -64,12 +67,8 @@
     min-width: 75px
 }
 
-.DataPage tbody tr:hover {
-    background-color: rgba(1,1,1,0.2);
-}
-
-.ActiveTH img {
-    display: block !important;
+.DataPage th img {
+    display: none
 }
 
 .DataPage th div {
@@ -81,8 +80,8 @@
     position: relative;
 }
 
-.DataPage th img {
-    display: none;
+.DataPage .ActiveTH img {
+    display: block;
     width: 16px;
     height: 16px;
     position: absolute;

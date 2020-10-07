@@ -26,6 +26,5 @@
 
 .FilterForm button {
     margin: 0;
-    border: unset;
     border-left: 1px solid black;
 }
