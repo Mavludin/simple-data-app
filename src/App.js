@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { loadData } from './store/actions'
 import { BrowserRouter, Route } from 'react-router-dom'
 
-const App = () => {
+export const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -22,5 +22,3 @@ const App = () => {
     </BrowserRouter>
   )
 }
-
-export default App
